@@ -3,8 +3,9 @@ use crypto::sha1::Sha1;
 
 pub fn main() {
     // Generate all combinations of non repeating number from length 4 to 9.
-    let mut counter: i32 = 0;
+    let mut counter = 0;
     let mut hasher = Sha1::new();
+
     'external: for x in 1234..987654321 {
         let str_version = x.to_string();
         if str_version.matches("0").count() > 0 {
@@ -15,18 +16,19 @@ pub fn main() {
                 continue 'external;
             }
         }
+
         let mapped: Vec<u8> = str_version.chars().map(|c| c.to_digit(10).unwrap() as u8 - 1).collect();
         hasher.input(mapped.as_slice());
-        let hex = hasher.result_str();
-        if hex == "342cd322b93f9cdd87de7465e4084e8f5763cb13" {
+        if hasher.result_str() == "2c3422d33fb9dd9cde87657408e48f4e635713cb" {
             println!("FOUND {}", str_version);
             break 'external;
         }
         hasher.reset();
-        counter += 1;
+
         if counter % 10000 == 0 {
             println!("{} done - {}", counter, str_version);
         }
+        counter += 1;
     }
-    println!("{}", counter);
+    println!("{} done", counter);
 }
